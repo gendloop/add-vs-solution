@@ -10,7 +10,7 @@ open my $fh_in, '<', $input_file or die "Cannot open input file: $!";
 my $content = do { local $/; <$fh_in> };
 close $fh_in;
 
-$content =~ s/\Q$old_string\E/$new_string/g;
+\Q$content\E =~ s/\Q$old_string\E/$new_string/g;
 
 open my $fh_out, '>', $output_file or die "Cannot open output file: $!";
 print $fh_out $content;
