@@ -12,11 +12,16 @@ runs:
 
     - name: add-vs-solution
       working-directory: ${{ github.action_path }}/docs
-      shell: bash
+      shell: pwsh
       run: |
         repo_name=${GITHUB_REPOSITORY#*/}
         perl replace.pl NewProject.sln ${repo_name}.sln NewProject ${repo_name}
         perl NewProject/NewProject.vcxproj NewProject/${repo_name}.vcxproj NewProject ${repo_name}
+
+    - name: copy
+      working-directory: ${{ github.action_path }}/docs
+      shell: bash
+      run: |
         mkdir ${{ github.workspace }}/${repo_name}
         cp ${repo_name}.sln ${{ github.workspace }}
         cp NewProject/${repo_name}.vcxproj ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj
