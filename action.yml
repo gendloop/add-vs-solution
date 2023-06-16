@@ -1,24 +1,12 @@
-name: add-submodule
+name: add-vs-solution
 author: gendloop
-description: 'add-submodule'
+description: 'Add a vs solution for Repo'
 
 inputs:
-  label:
-    description: 'Repository Label'
-    required: true
-    default: ''
   repo_name:
-    description: 'Repository Name'
+    description: 'Repository Name (e.g. MyRepo)'
     required: true
     default: ''
-  branch:
-    description: 'Default Branch'
-    required: true
-    default: 'main'
-  token:
-    description: 'Personal Token'
-    required: false
-    default: ${{ github.token }}
 
 runs:
   using: 'composite'
@@ -26,7 +14,7 @@ runs:
     - name: checkout
       uses: actions/checkout@v3
       with:
-        token: ${{ inputs.token }}
+        token: ${{ github.token }}
 
     - name: add-submodule
       shell: bash
