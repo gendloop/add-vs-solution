@@ -14,5 +14,5 @@ close $fh;
 $content =~ s/$old_string/$new_string/g;
 
 open $fh, '>', $output_file or die "Cannot open output file: $!";
-print $fh @content;
+print $fh $content;
 close $fh;
