@@ -7,7 +7,7 @@ my $old_string = shift @ARGV;
 my $new_string = shift @ARGV;
 
 open my $fh_in, '<', $input_file or die "Cannot open input file: $!";
-my $content = do { local $/; <$fh_in> };
+my @content = do { local $/; <$fh_in> };
 close $fh_in;
 
 foreach my $index (6, 24) {
