@@ -11,7 +11,7 @@ my @content = do { local $/; <$fh_in> };
 close $fh_in;
 
 foreach my $index (6, 24) {
-  $content[$index] =~ s/\Q$old_string\E/$new_string/g;
+  my $content[$index] =~ s/\Q$old_string\E/$new_string/g;
 }
 
 open my $fh_out, '>', $output_file or die "Cannot open output file: $!";
