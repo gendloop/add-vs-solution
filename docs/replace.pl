@@ -11,8 +11,11 @@ my @content = do { local $/; <$fh_in> };
 close $fh_in;
 
 
-foreach my $line (@content) {
-    $line =~ s/\Q$old_string\E/$new_string/g;
+foreach my $index (6, 24) {
+  if (defined $content[$index]) {
+    $content[$index] =~ s/$old_string/$new_string/g;
+  }
+  
 }
 
 open my $fh_out, '>', $output_file or die "Cannot open output file: $!";
