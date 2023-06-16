@@ -2,45 +2,33 @@ name: add-vs-solution
 author: gendloop
 description: 'Add a vs solution for Repo'
 
-inputs:
-  repo_name:
-    description: 'Repository Name (e.g. MyRepo)'
-    required: true
-    default: ''
-
 runs:
   using: 'composite'
   steps:
     - name: checkout
       uses: actions/checkout@v3
-      with:
-        token: ${{ github.token }}
+      with: 
+        fetch-depth: 0
 
-    - name: add-submodule
+    - name: add-vs-solution
+      working-directory: ${{ github.action_path }}/docs
       shell: bash
       run: |
-        # config
-        if [ "$GITHUB_ACTOR" != "${{ github.repository_owner }}" ]; then
-          git config --global user.name "gendloop"
-          git config --global user.email "gendloop@163.com"
-        else
-          git config --global user.name "$GITHUB_ACTOR"
-          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-        fi
-        git config --global credential.helper store
-        echo "machine github.com login ${{ github.actor }} password ${{ inputs.token }}" > ~/.netrc
-        # add-submodule
-        git submodule add -b ${{ inputs.branch }} "https://github.com/${{ github.repository_owner }}/${{ inputs.repo_name }}"
-        git submodule init
-        git submodule update
-        git add .
-        git commit -m "feat: add submodule ${{ inputs.repo_name }}"
-        git push
+        repo_name=${GITHUB_REPOSITORY#*/}
+        perl replace.pl NewProject.sln ${{ github.workspace }}/${repo_name}.sln NewProject ${repo_name}
+        perl NewProject/NewProject.vcxproj NewProject.sln ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj NewProject ${repo_name}
+        cp NewProject/NewProject.vcxproj.filters ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj.filters
+        cp NewProject/NewProject.vcxproj.user ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj.user
 
-    - name: update-README.md
+    - name: push-origin
+      working-directory: ${{ github.workspace }}
       shell: bash
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
       run: |
-        sed -i '3i [![${{ inputs.repo_name }}](https://img.shields.io/static/v1?label=${{ inputs.label }}&message=${{ inputs.repo_name }}&color=blue)](https://github.com/${{ github.repository_owner }}/${{ inputs.repo_name }}/tree/${{ inputs.branch }}) ' README.md
+        repo_name=${GITHUB_REPOSITORY#*/}
+        git config --global user.name "$GITHUB_ACTOR"
+        git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git add .
-        git commit -m "chore: update README.md"
+        git commit -m "feat: add vs solution `'${repo_name}.sln'` "
         git push
