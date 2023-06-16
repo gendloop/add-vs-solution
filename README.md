@@ -1,4 +1,4 @@
-# add-vs-solusion
+# add-vs-solution
 
 ## Usage
 
