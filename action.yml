@@ -16,7 +16,7 @@ runs:
       run: |
         repo_name=${GITHUB_REPOSITORY#*/}
         perl replace.pl NewProject.sln ${{ github.workspace }}/${repo_name}.sln NewProject ${repo_name}
-        perl NewProject/NewProject.vcxproj NewProject.sln ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj NewProject ${repo_name}
+        perl NewProject/NewProject.vcxproj ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj NewProject ${repo_name}
         cp NewProject/NewProject.vcxproj.filters ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj.filters
         cp NewProject/NewProject.vcxproj.user ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj.user
 
