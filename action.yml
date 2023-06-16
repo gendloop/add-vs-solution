@@ -1,0 +1,58 @@
+name: add-submodule
+author: gendloop
+description: 'add-submodule'
+
+inputs:
+  label:
+    description: 'Repository Label'
+    required: true
+    default: ''
+  repo_name:
+    description: 'Repository Name'
+    required: true
+    default: ''
+  branch:
+    description: 'Default Branch'
+    required: true
+    default: 'main'
+  token:
+    description: 'Personal Token'
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: checkout
+      uses: actions/checkout@v3
+      with:
+        token: ${{ inputs.token }}
+
+    - name: add-submodule
+      shell: bash
+      run: |
+        # config
+        if [ "$GITHUB_ACTOR" != "${{ github.repository_owner }}" ]; then
+          git config --global user.name "gendloop"
+          git config --global user.email "gendloop@163.com"
+        else
+          git config --global user.name "$GITHUB_ACTOR"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        fi
+        git config --global credential.helper store
+        echo "machine github.com login ${{ github.actor }} password ${{ inputs.token }}" > ~/.netrc
+        # add-submodule
+        git submodule add -b ${{ inputs.branch }} "https://github.com/${{ github.repository_owner }}/${{ inputs.repo_name }}"
+        git submodule init
+        git submodule update
+        git add .
+        git commit -m "feat: add submodule ${{ inputs.repo_name }}"
+        git push
+
+    - name: update-README.md
+      shell: bash
+      run: |
+        sed -i '3i [![${{ inputs.repo_name }}](https://img.shields.io/static/v1?label=${{ inputs.label }}&message=${{ inputs.repo_name }}&color=blue)](https://github.com/${{ github.repository_owner }}/${{ inputs.repo_name }}/tree/${{ inputs.branch }}) ' README.md
+        git add .
+        git commit -m "chore: update README.md"
+        git push

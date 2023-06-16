@@ -1,2 +1,6 @@
-# add-vs-solution
-Add a vs solution to repo.
+# add-vs-solusion
+
+## Usage
+
+[Add_VS_Solution.yml](Add_VS_Solution.yml) 
+
