@@ -7,8 +7,12 @@ runs:
   steps:
     - name: checkout
       uses: actions/checkout@v3
-      with: 
-        fetch-depth: 0
+
+    - name: get-repo-name
+      id: get-repo-name
+      run: |
+        repo_name=${GITHUB_REPOSITORY#*/}
+        echo "reponame=$repo_name" >> "$GITHUB_OUTPUT"
 
     - name: add-vs-solution
       working-directory: ${{ github.action_path }}/docs
@@ -22,15 +26,8 @@ runs:
         cp NewProject/${repo_name}.vcxproj ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj
         cp NewProject/NewProject.vcxproj.filters ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj.filters
 
-    - name: push-origin
-      working-directory: ${{ github.workspace }}
-      shell: bash
-      env:
-          GITHUB_TOKEN: ${{ github.token }}
-      run: |
-        repo_name=${GITHUB_REPOSITORY#*/}
-        git config --global user.name "$GITHUB_ACTOR"
-        git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-        git add .
-        (git commit -m "feat: add vs solution \`${repo_name}.sln\` ") || true
-        (git push) || true
+    - name: git-push
+      uses: gendloop/git-push@main
+      with:
+        token: ${{ github.token }}
+        commit: "feat: add vs solution \\`${{ steps.get-repo-name.outputs.reponame }}.sln\\` "
