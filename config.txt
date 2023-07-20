@@ -1,0 +1,5 @@
+
+PROJECT_NAME=add-vs-solution
+add-vs-solution_VERSION_MAJOR=1
+add-vs-solution_VERSION_MINOR=0
+add-vs-solution_VERSION_PATCH=0
