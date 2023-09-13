@@ -28,7 +28,7 @@ runs:
         cp NewProject/NewProject.vcxproj.filters ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj.filters
 
     - name: git-push
-      uses: gendloop/git-push@main
+      uses: gendloop/git-push@v1.0.0
       with:
         token: ${{ github.token }}
         commit: "feat: add vs solution \\`${{ steps.get-repo-name.outputs.reponame }}.sln\\` "
