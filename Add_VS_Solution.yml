@@ -12,4 +12,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: add-vs-solution
-        uses: gendloop/add-vs-solution@main
+        uses: gendloop/add-vs-solution@v1.0.2
