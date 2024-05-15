@@ -15,13 +15,23 @@ runs:
         repo_name=${GITHUB_REPOSITORY#*/}
         echo "reponame=$repo_name" >> "$GITHUB_OUTPUT"
 
+    - name: to-upper
+      id: to-upper
+      shell: pwsh
+      run: |
+        $str = "${{ steps.get-repo-name.outputs.reponame }}"
+        $upper_str = $str.ToUpper()
+        echo "upper_reponame=$upper_str" >> $env:GITHUB_OUTPUT
+
     - name: add-vs-solution
       working-directory: ${{ github.action_path }}/docs
       shell: bash
       run: |
-        repo_name=${GITHUB_REPOSITORY#*/}
+        repo_name=${{ steps.get-repo-name.outputs.reponame }}
+        upper_repo_name=${{ steps.to-upper.outputs.upper_reponame }}
         perl replace.pl NewProject.sln ${repo_name}.sln NewProject ${repo_name}
         perl replace.pl NewProject/NewProject.vcxproj NewProject/${repo_name}.vcxproj NewProject ${repo_name}
+        perl replace.pl NewProject/${repo_name}.vcxproj NewProject/${repo_name}.vcxproj XI_EXPORT_TARGET ${upper_repo_name}
         mkdir -p ${{ github.workspace }}/${repo_name}
         cp ${repo_name}.sln ${{ github.workspace }}
         cp NewProject/${repo_name}.vcxproj ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj
