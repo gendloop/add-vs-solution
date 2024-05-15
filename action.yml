@@ -31,7 +31,7 @@ runs:
         upper_repo_name=${{ steps.to-upper.outputs.upper_reponame }}
         perl replace.pl NewProject.sln ${repo_name}.sln NewProject ${repo_name}
         perl replace.pl NewProject/NewProject.vcxproj NewProject/${repo_name}.vcxproj NewProject ${repo_name}
-        perl replace.pl NewProject/${repo_name}.vcxproj NewProject/${repo_name}.vcxproj XI_EXPORT_TARGET XI_EXPORT_${upper_repo_name}
+        perl replace.pl NewProject/${repo_name}.vcxproj NewProject/${repo_name}.vcxproj XI_EXPORT_TARGET XI_DLL_${upper_repo_name}
         mkdir -p ${{ github.workspace }}/${repo_name}
         cp ${repo_name}.sln ${{ github.workspace }}
         cp NewProject/${repo_name}.vcxproj ${{ github.workspace }}/${repo_name}/${repo_name}.vcxproj
